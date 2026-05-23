@@ -28,13 +28,31 @@ defaultConfig {
     // Note: If your specific template relies on variable versions from the local properties, use:
     // minSdk = flutter.minSdkVersion
     // targetSdk = flutter.targetSdkVersion
+    ndk {
+        // Enforce compilation targets exclusively for real mobile chips and emulator environments
+        abiFilters.addAll(setOf("armeabi-v7a", "arm64-v8a", "x86_64"))
+    }
 }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+        getByName("release") {
+            // Signing configurations go here if configured
             signingConfig = signingConfigs.getByName("debug")
+            
+            // Activate code shrinking and optimization features
+            isMinifyEnabled = true
+            isShrinkResources = true
+            
+            // REGISTER YOUR PROGUARD RULES DIRECTLY HERE
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
 }
