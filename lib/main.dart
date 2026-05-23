@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 
@@ -71,11 +72,20 @@ class _RealTimeClassifierScreenState extends State<RealTimeClassifierScreen> {
 
     // 2. Initialize Model Parameters to match your python validation script
     try {
+      // Read labels asset to determine number of classes for the model
+      String labelsData = await rootBundle.loadString('assets/labels.txt');
+      int numberOfClasses = labelsData
+          .split('\n')
+          .where((line) => line.trim().isNotEmpty)
+          .length;
+
       _onDeviceModelInterpreter = await PytorchLite.loadClassificationModel(
         "assets/best_plant_model.ptl",
-        224, // Input spatial width image resolution constraint
-        224, // Input spatial height image resolution constraint
+        224,
+        224,
+        numberOfClasses,
         labelPath: "assets/labels.txt",
+        ensureMatchingNumberOfClasses: false,
       );
     } catch (e) {
       setState(() {
@@ -126,8 +136,7 @@ class _RealTimeClassifierScreenState extends State<RealTimeClassifierScreen> {
         // Execute native inference directly against mobile runtime memory registers
         String predictionResult = await _onDeviceModelInterpreter!
             .getCameraImagePrediction(
-              inputFrameBuffer,
-              _hardwareCameraController!.description.sensorOrientation,
+              inputFrameBuffer, // Only pass the raw image stream frame buffer here
             );
 
         if (mounted && predictionResult.trim().isNotEmpty) {
