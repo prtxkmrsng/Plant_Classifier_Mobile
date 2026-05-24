@@ -39,9 +39,10 @@ defaultConfig {
             // Signing configurations go here if configured
             signingConfig = signingConfigs.getByName("debug")
             
-            // Activate code shrinking and optimization features
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // DISABLED: pytorch_lite requires these to be false
+            // or native JNI classes get stripped causing crashes
+            isMinifyEnabled = false
+            isShrinkResources = false
             
             // REGISTER YOUR PROGUARD RULES DIRECTLY HERE
             proguardFiles(

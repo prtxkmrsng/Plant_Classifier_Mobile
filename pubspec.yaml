@@ -4,17 +4,23 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.12.0 <4.0.0' # Anchored to your configured Dart Toolchain version
+  sdk: '>=3.12.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # Native device hardware abstraction tools
+  # Camera hardware access
   camera: ^0.11.0
-  
-  # Highly-optimized native deep learning runtime for low-overhead local execution
+
+  # On-device PyTorch Lite inference runtime
   pytorch_lite: ^4.0.0
+
+  # Pick images from gallery
+  image_picker: ^1.1.2
+
+  # Premium typography
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -24,7 +30,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Asset binding configuration ensuring local compilation includes your files
   assets:
     - assets/best_plant_model.ptl
     - assets/labels.txt
